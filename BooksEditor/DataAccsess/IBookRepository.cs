@@ -13,7 +13,7 @@ namespace BooksEditor.DataAccsess
         public ICollection<Author> Authors { get; set; }
         public int PagesNumber { get; set; }
         public string Publisher { get; set; }
-        public int ReleaseDate { get; set; }
+        public int ReleaseYear { get; set; }
         public string Image { get; set; }
     }
 }

@@ -36,5 +36,6 @@ namespace BooksEditor.Models
         public int ReleaseYear { get; set; }
 
         public string Image { get; set; }
+
     }
 }

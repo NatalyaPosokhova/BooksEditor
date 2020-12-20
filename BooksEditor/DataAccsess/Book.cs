@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BooksEditor.Models
 {
-    public class Book : IBookRepository
+    public class Book
     {
         public Book()
         {

@@ -19,5 +19,10 @@ namespace BooksEditor.DataAccsess
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>().ToTable("Book");
+            modelBuilder.Entity<Author>().ToTable("Author");
+        }
     }
 }

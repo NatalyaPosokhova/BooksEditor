@@ -32,7 +32,7 @@ namespace BooksEditor.Models
         public string Publisher { get; set; }
 
         [Required]
-        [CustomDateAttribute]
+        [CustomDate]
         public int ReleaseDate { get; set; }
 
         public string Image { get; set; }

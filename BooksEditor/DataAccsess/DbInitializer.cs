@@ -12,10 +12,9 @@ namespace BooksEditor.DataAccsess
         {
             context.Database.EnsureCreated();
 
-            // Look for any students.
             if (context.Books.Any())
             {
-                return;   // DB has been seeded
+                return;   
             }
 
             var books = new Book[]

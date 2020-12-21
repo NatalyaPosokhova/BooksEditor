@@ -44,9 +44,9 @@ namespace BooksEditor.DataAccsess
 
             foreach (Author author in authors)
             {
-                var enrollmentInDataBase = context.Authors.Where(
+                var authorInDataBase = context.Authors.Where(
                     s => s.Book.Id == author.BookID).SingleOrDefault();
-                if (enrollmentInDataBase == null)
+                if (authorInDataBase == null)
                 {
                     context.Authors.Add(author);
                 }

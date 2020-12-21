@@ -10,7 +10,7 @@ namespace BooksEditor.DataAccsess
     {
         public IEnumerable<Book> GetAll();
         public void AddBookData(Book book);
-        public Book Find(int id);
+        public Book FindBookById(int id);
         public void Update(Book book);
         public void Remove(int id);
     }

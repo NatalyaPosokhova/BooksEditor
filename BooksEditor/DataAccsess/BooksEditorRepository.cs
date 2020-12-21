@@ -14,12 +14,13 @@ namespace BooksEditor.DataAccsess
             _context = context;
         }
 
-        public void AddBookData(Book book)
+        public async void AddBookData(Book book)
         {
             _context.Add(book);
+            await _context.SaveChangesAsync();
         }
 
-        public Book Find(int id)
+        public Book FindBookById(int id)
         {
             throw new NotImplementedException();
         }

@@ -19,8 +19,26 @@ namespace BooksEditor.Controllers
         }
         public async Task<IActionResult> Index(string sortOrder)
         {
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
             var books = await _repository.GetAllBooks();
 
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    books = books.OrderByDescending(s => s.Title);
+                    break;
+                case "Date":
+                    books = books.OrderBy(s => s.ReleaseYear);
+                    break;
+                case "date_desc":
+                    books = books.OrderByDescending(s => s.ReleaseYear);
+                    break;
+                default:
+                    books = books.OrderBy(s => s.Title);
+                    break;
+            }
             return View(books);
         }
 

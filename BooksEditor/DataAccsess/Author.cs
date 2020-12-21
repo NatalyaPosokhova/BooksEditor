@@ -9,6 +9,7 @@ namespace BooksEditor.Models
 {
     public class Author
     {
+        [Key]
         public int AuthorID { get; set; }
 
         [Required]
@@ -25,5 +26,13 @@ namespace BooksEditor.Models
 
         [Required]
         public Book Book { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BooksEditor.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,9 @@ namespace BooksEditor.DataAccsess
             return await _context.Books.FindAsync(id);
         }
 
-        public IEnumerable<Book> GetAllBooks()
+        public async Task<IEnumerable<Book>> GetAllBooks()
         {
-            return _context.Books;
+            return await _context.Books.ToListAsync();
         }
 
         public void Remove(int id)

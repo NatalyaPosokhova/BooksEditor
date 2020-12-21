@@ -11,7 +11,7 @@ namespace BooksEditor.DataAccsess
         public Task<IEnumerable<Book>> GetAllBooks();
         public void AddBookData(Book book);
         public Task<Book> FindBookById(int id);
-        public void Update(Book book);
+        public void UpdateBook(Book book);
         public void RemoveBook(int id);
     }
 }

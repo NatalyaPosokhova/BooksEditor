@@ -32,6 +32,8 @@ namespace BooksEditor
 
             services.AddMvc();
 
+            services.AddScoped<IRepository, BooksEditorRepository>();
+
             services.AddLogging();
 
             services.AddDbContext<BooksEditorContext>(options =>

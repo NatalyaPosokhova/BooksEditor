@@ -12,6 +12,6 @@ namespace BooksEditor.DataAccsess
         public void AddBookData(Book book);
         public Task<Book> FindBookById(int id);
         public void Update(Book book);
-        public void Remove(int id);
+        public void RemoveBook(int id);
     }
 }

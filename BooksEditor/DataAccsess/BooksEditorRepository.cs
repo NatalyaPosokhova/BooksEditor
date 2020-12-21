@@ -31,9 +31,11 @@ namespace BooksEditor.DataAccsess
             return await _context.Books.ToListAsync();
         }
 
-        public void Remove(int id)
+        public async void RemoveBook(int id)
         {
-            throw new NotImplementedException();
+            var book = await FindBookById(id);
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
         }
 
         public void Update(Book book)

@@ -8,9 +8,9 @@ namespace BooksEditor.DataAccsess
 {
     public interface IRepository
     {
-        public IEnumerable<Book> GetAll();
+        public IEnumerable<Book> GetAllBooks();
         public void AddBookData(Book book);
-        public Book FindBookById(int id);
+        public Task<Book> FindBookById(int id);
         public void Update(Book book);
         public void Remove(int id);
     }

@@ -25,9 +25,9 @@ namespace BooksEditor.DataAccsess
             return await _context.Books.FindAsync(id);
         }
 
-        public IEnumerable<Book> GetAll()
+        public IEnumerable<Book> GetAllBooks()
         {
-            throw new NotImplementedException();
+            return _context.Books;
         }
 
         public void Remove(int id)
@@ -39,5 +39,7 @@ namespace BooksEditor.DataAccsess
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

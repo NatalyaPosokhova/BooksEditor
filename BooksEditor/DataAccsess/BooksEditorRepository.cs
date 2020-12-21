@@ -20,9 +20,9 @@ namespace BooksEditor.DataAccsess
             await _context.SaveChangesAsync();
         }
 
-        public Book FindBookById(int id)
+        public async Task<Book> FindBookById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Books.FindAsync(id);
         }
 
         public IEnumerable<Book> GetAll()

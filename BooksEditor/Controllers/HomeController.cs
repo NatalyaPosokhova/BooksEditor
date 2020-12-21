@@ -6,14 +6,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BooksEditor.Models;
+using BooksEditor.DataAccsess;
 
 namespace BooksEditor.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private IRepository _repository;
+        public HomeController(IRepository repository)
         {
-            return View();
+            _repository = repository;
+        }
+        public async Task<IActionResult> Index(string sortOrder)
+        {
+            var books = await _repository.GetAllBooks();
+
+            return View(books);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

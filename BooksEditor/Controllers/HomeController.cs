@@ -64,7 +64,7 @@ namespace BooksEditor.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-        [Bind("Title, Authors, PagesNumber, Publisher, ReleaseDate, Image")] Book book)
+        [Bind("Title, Authors, PagesNumber, Publisher, ReleaseYear, Image")] Book book)
         {
             try
             {

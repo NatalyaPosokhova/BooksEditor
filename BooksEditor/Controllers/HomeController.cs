@@ -48,7 +48,7 @@ namespace BooksEditor.Controllers
         }
 
         /// <summary>
-        /// GET for Create
+        /// GET for Create Book
         /// </summary>
         /// <returns></returns>
         public IActionResult Create()
@@ -57,7 +57,7 @@ namespace BooksEditor.Controllers
         }
 
         /// <summary>
-        /// POST for Create
+        /// POST for Create Book
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
@@ -81,6 +81,35 @@ namespace BooksEditor.Controllers
                     "see your system administrator.");
             }
             return View(book);
+        }
+
+        /// <summary>
+        /// GET for Edit Book
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Edit(int id)
+        {
+            var book = await _repository.FindBookById(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            return View(book);
+        }
+
+        /// <summary>
+        /// POST for Edit Book
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPost(int id)
+        {
+            var bookToUpdate = await _repository.FindBookById(id);
+            await _repository.UpdateBook(bookToUpdate);
+            return View(bookToUpdate);
         }
 
         /// <summary>

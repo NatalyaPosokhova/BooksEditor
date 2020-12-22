@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using BooksEditor.Models;
 using BooksEditor.DataAccsess;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using FluentAssertions.Common;
 
 namespace BooksEditor.Controllers
 {
@@ -43,6 +45,42 @@ namespace BooksEditor.Controllers
                     break;
             }
             return View(books);
+        }
+
+        /// <summary>
+        /// GET for Create
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// POST for Create
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(
+        [Bind("Title, Authors, PagesNumber, Publisher, ReleaseDate, Image")] Book book)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                     _repository.AddBookData(book);
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (DbUpdateException /*ex*/ )
+{
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
+            }
+            return View(book);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

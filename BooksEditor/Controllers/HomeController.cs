@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BooksEditor.Models;
 using BooksEditor.DataAccsess;
+using System.Linq;
 
 namespace BooksEditor.Controllers
 {
@@ -24,6 +25,8 @@ namespace BooksEditor.Controllers
 
             var books = await _repository.GetAllBooks();
 
+            books.ToList().ForEach(book => _repository.IncludeAuthors(book.Id));
+           
             switch (sortOrder)
             {
                 case "name_desc":

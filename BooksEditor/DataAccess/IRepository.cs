@@ -13,5 +13,6 @@ namespace BooksEditor.DataAccsess
         public Task<Book> FindBookById(int id);
         public void UpdateBook(Book book);
         public void RemoveBook(int id);
+        public void IncludeAuthors(int id);
     }
 }

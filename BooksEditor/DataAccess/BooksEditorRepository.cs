@@ -65,5 +65,10 @@ namespace BooksEditor.DataAccsess
             _context.Books.Update(book);
             await _context.SaveChangesAsync();
         }
+
+        public void IncludeAuthors(int id)
+        {
+            _context.Books.Include(x => x.Authors).Where(x => x.Id == id).Single();
+        }
     }
 }

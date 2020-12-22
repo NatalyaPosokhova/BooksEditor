@@ -35,11 +35,21 @@ namespace BooksEditor.DataAccsess
                      FirstName = "Mark",
                      LastName = "Twain"
                 },
-                    new Author {
-                    BookID = books.Single(s => s.Title == "Winnie the Pooh").Id,
+                new Author {
+                    BookID = books.Single(s => s.Title == "The Adventures of Tom Sawyer").Id,
                      FirstName = "Alan",
-                     LastName = "Miln"
-                    }
+                     LastName = "Keller"
+                },
+                new Author {
+                    BookID = books.Single(s => s.Title == "The Adventures of Tom Sawyer").Id,
+                     FirstName = "Tom",
+                     LastName = "Andersen"
+                },
+                new Author {
+                BookID = books.Single(s => s.Title == "Winnie the Pooh").Id,
+                FirstName = "Alan",
+                LastName = "Miln"
+                }
 };
 
             foreach (Author author in authors)

@@ -49,9 +49,8 @@ namespace BooksEditor.DataAccsess
         /// Removes Book from BookDB
         /// </summary>
         /// <param name="id"></param>
-        public async Task RemoveBook(int id)
+        public async Task RemoveBook(Book book)
         {
-            var book = await FindBookById(id);
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
         }

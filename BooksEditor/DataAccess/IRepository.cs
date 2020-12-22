@@ -12,7 +12,7 @@ namespace BooksEditor.DataAccsess
         public Task AddBookData(Book book);
         public Task<Book> FindBookById(int id);
         public Task UpdateBook(Book book);
-        public Task RemoveBook(int id);
+        public Task RemoveBook(Book book);
         public void IncludeAuthors(int id);
     }
 }

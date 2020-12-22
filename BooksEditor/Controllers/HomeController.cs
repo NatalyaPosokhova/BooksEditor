@@ -28,7 +28,7 @@ namespace BooksEditor.Controllers
             var books = await _repository.GetAllBooks();
 
             books.ToList().ForEach(book => _repository.IncludeAuthors(book.Id));
-           
+
             switch (sortOrder)
             {
                 case "name_desc":
@@ -75,12 +75,61 @@ namespace BooksEditor.Controllers
                 }
             }
             catch (DbUpdateException /*ex*/ )
-{
+            {
                 ModelState.AddModelError("", "Unable to save changes. " +
                     "Try again, and if the problem persists " +
                     "see your system administrator.");
             }
             return View(book);
+        }
+
+        /// <summary>
+        /// GET for Delete Book
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="saveChangesError"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Delete(int id, bool? saveChangesError = false)
+        {
+            var books = await _repository.FindBookById(id);
+            if (books == null)
+            {
+                return NotFound();
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists " +
+                    "see your system administrator.";
+            }
+            return View(books);
+        }
+
+        /// <summary>
+        /// POST for Delete Book
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var book = await _repository.FindBookById(id);
+            if (book == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            try
+            {
+                await _repository.RemoveBook(book);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -70,7 +70,7 @@ namespace BooksEditor.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                     _repository.AddBookData(book);
+                    await _repository.AddBookData(book);
                     return RedirectToAction(nameof(Index));
                 }
             }

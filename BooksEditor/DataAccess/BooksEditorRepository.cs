@@ -20,7 +20,7 @@ namespace BooksEditor.DataAccsess
         /// Adds Book to BookDB
         /// </summary>
         /// <param name="book"></param>
-        public async void AddBookData(Book book)
+        public async Task AddBookData(Book book)
         {
             _context.Add(book);
             await _context.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace BooksEditor.DataAccsess
         /// Removes Book from BookDB
         /// </summary>
         /// <param name="id"></param>
-        public async void RemoveBook(int id)
+        public async Task RemoveBook(int id)
         {
             var book = await FindBookById(id);
             _context.Books.Remove(book);
@@ -60,7 +60,7 @@ namespace BooksEditor.DataAccsess
         /// Uodates Book in BookDb by id
         /// </summary>
         /// <param name="id"></param>
-        public async void UpdateBook(Book book)
+        public async Task UpdateBook(Book book)
         {
             _context.Books.Update(book);
             await _context.SaveChangesAsync();

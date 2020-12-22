@@ -108,7 +108,24 @@ namespace BooksEditor.Controllers
         public async Task<IActionResult> EditPost(int id)
         {
             var bookToUpdate = await _repository.FindBookById(id);
-            await _repository.UpdateBook(bookToUpdate);
+          
+            if (await TryUpdateModelAsync<Book>(
+                bookToUpdate,
+                "",
+                s => s.Title, s => s.Authors, s => s.PagesNumber, s => s.Publisher, s => s.ReleaseYear, s => s.Image))
+            {
+                try
+                {
+                    await _repository.UpdateBook(bookToUpdate);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
+                }
+            }
             return View(bookToUpdate);
         }
 

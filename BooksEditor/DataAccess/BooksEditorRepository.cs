@@ -67,7 +67,10 @@ namespace BooksEditor.DataAccsess
 
         public void IncludeAuthors(int id)
         {
-            _context.Books.Include(x => x.Authors).Where(x => x.Id == id).Single();
+            //_context.Books.Include(x => x.Authors).Where(x => x.Id == id).Single();
+            _context.Books
+            .Include(x => x.Authors)
+            .Where(x => x.Id == id).ToList();
         }
     }
 }

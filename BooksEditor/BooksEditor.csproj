@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\" />
+    <None Include="wwwroot\img\TomSawyer.jpg" />
+    <None Include="wwwroot\img\Winnie.jpg" />
   </ItemGroup>
 
 </Project>

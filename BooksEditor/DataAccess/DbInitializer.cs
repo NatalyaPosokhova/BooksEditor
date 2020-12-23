@@ -19,8 +19,8 @@ namespace BooksEditor.DataAccsess
 
             var books = new Book[]
             {
-            new Book{ Title = "The Adventures of Tom Sawyer",  PagesNumber = 1000, Publisher = "HarperCollins Publishers", ReleaseYear = 1876, Image = @"/Images/TomSawyer.jpg"},
-            new Book{ Title = "Winnie the Pooh", PagesNumber = 300, Publisher = "Random House Inc.", ReleaseYear = 1926, Image = @"/Images/Winnie.jpg" }
+            new Book{ Title = "The Adventures of Tom Sawyer",  PagesNumber = 1000, Publisher = "HarperCollins Publishers", ReleaseYear = 1876, Image = "TomSawyer.jpg"},
+            new Book{ Title = "Winnie the Pooh", PagesNumber = 300, Publisher = "Random House Inc.", ReleaseYear = 1926, Image = "Winnie.jpg" }
             };
             foreach (Book book in books)
             {

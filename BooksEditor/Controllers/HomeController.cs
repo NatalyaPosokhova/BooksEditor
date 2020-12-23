@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BooksEditor.Models;
 using BooksEditor.DataAccsess;
-using System.Linq;
+using System.Web;
 using Microsoft.EntityFrameworkCore;
 using FluentAssertions.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace BooksEditor.Controllers
 {
@@ -64,12 +65,25 @@ namespace BooksEditor.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-        [Bind("Title, Authors, PagesNumber, Publisher, ReleaseYear, Image")] Book book)
+        [Bind("Title, Authors, PagesNumber, Publisher, ReleaseYear, Image")] Book book, [FromForm(Name = "upload")] IFormFile upload)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    if (upload != null)
+                    {
+                        //string fileName = System.IO.Path.GetFileName(upload.FileName);
+                        ////upload.SaveAs(Server.MapPath("~/img/" + fileName));
+                        //var filePath = "~/img/" + fileName;
+                        //using (var stream = System.IO.File.Create(filePath))
+                        //{
+                        //    await upload.CopyToAsync(stream);
+                        //}
+
+                        
+                    }
+
                     await _repository.AddBookData(book);
                     return RedirectToAction(nameof(Index));
                 }

@@ -11,15 +11,19 @@ using System.Web;
 using Microsoft.EntityFrameworkCore;
 using FluentAssertions.Common;
 using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace BooksEditor.Controllers
 {
     public class HomeController : Controller
     {
         private IRepository _repository;
-        public HomeController(IRepository repository)
+        private readonly IHostingEnvironment _environment;
+        public HomeController(IRepository repository, IHostingEnvironment environment)
         {
             _repository = repository;
+            _environment = environment;
         }
         public async Task<IActionResult> Index(string sortOrder)
         {
@@ -73,17 +77,16 @@ namespace BooksEditor.Controllers
                 {
                     if (upload != null)
                     {
-                        //string fileName = System.IO.Path.GetFileName(upload.FileName);
-                        ////upload.SaveAs(Server.MapPath("~/img/" + fileName));
-                        //var filePath = "~/img/" + fileName;
-                        //using (var stream = System.IO.File.Create(filePath))
-                        //{
-                        //    await upload.CopyToAsync(stream);
-                        //}
+                        string fileName = Path.GetFileName(upload.FileName);
+                        var uploads = Path.Combine(_environment.WebRootPath, "img");
+                        var fullPath = Path.Combine(uploads, fileName);
+                        book.Image = fileName;
 
-                        
+                        if (!System.IO.File.Exists(fullPath))
+                        {
+                            upload.CopyTo(new FileStream(fullPath, FileMode.Create));
+                        }
                     }
-
                     await _repository.AddBookData(book);
                     return RedirectToAction(nameof(Index));
                 }

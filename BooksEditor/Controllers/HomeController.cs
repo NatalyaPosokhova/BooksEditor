@@ -18,9 +18,9 @@ namespace BooksEditor.Controllers
 {
     public class HomeController : Controller
     {
-        private IBooksEditorRepository _repository;
+        private IBooksRepository _repository;
         private readonly IHostingEnvironment _environment;
-        public HomeController(IBooksEditorRepository repository, IHostingEnvironment environment)
+        public HomeController(IBooksRepository repository, IHostingEnvironment environment)
         {
             _repository = repository;
             _environment = environment;
@@ -36,7 +36,6 @@ namespace BooksEditor.Controllers
             var booksViewModel = (from book in books
                          join author in authors on book.Id equals author.BookID
                          into tempAuthors
-                         //from authors_ in tempAuthors.DefaultIfEmpty()
                          select new BooksViewModel
                          {
                              Book = book,
@@ -84,18 +83,8 @@ namespace BooksEditor.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    UploadImage(upload, book);
                 
-                    if (upload != null)
-                    {
-                        string fileName = Path.GetFileName(upload.FileName);
-                        var uploads = Path.Combine(_environment.WebRootPath, "img");
-                        var fullPath = Path.Combine(uploads, fileName);
-                        book.Image = fileName;
-                        if (!System.IO.File.Exists(fullPath))
-                        {
-                            upload.CopyTo(new FileStream(fullPath, FileMode.Create));
-                        }
-                    }
                     await _repository.AddBookData(book);
                     return RedirectToAction(nameof(Index));
                 }
@@ -108,6 +97,22 @@ namespace BooksEditor.Controllers
             }
             return View(book);
         }
+
+        private void UploadImage(IFormFile upload, Book book)
+        {
+            if (upload != null)
+            {
+                string fileName = Path.GetFileName(upload.FileName);
+                var uploads = Path.Combine(_environment.WebRootPath, "img");
+                var fullPath = Path.Combine(uploads, fileName);
+                book.Image = fileName;
+                if (!System.IO.File.Exists(fullPath))
+                {
+                    upload.CopyTo(new FileStream(fullPath, FileMode.Create));
+                }
+            }
+        }
+
 
         /// <summary>
         /// GET for Edit Book

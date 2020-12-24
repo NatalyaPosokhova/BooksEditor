@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace BooksEditor.DataAccsess
 {
-    public class BooksEditorRepository : IBooksEditorRepository
+    public class BooksRepository : IBooksRepository
     {
         private BooksEditorContext _context { get; set; }
-        public BooksEditorRepository(BooksEditorContext context)
+        public BooksRepository(BooksEditorContext context)
         {
             _context = context;
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BooksEditor.DataAccsess
 {
-    public interface IBooksEditorRepository
+    public interface IBooksRepository
     {
         public Task<IEnumerable<Book>> GetAllBooks();
         public Task<IEnumerable<Author>> GetAllAuthors();

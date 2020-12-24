@@ -46,12 +46,7 @@ namespace BooksEditor.DataAccsess
             var books = await _context.Books.ToListAsync();
             return books;
         }
-        public async Task<IEnumerable<Author>> GetAllAuthors()
-        {
-            var authors = await _context.Authors.ToListAsync();
-            return authors;
-        }
-
+       
         /// <summary>
         /// Removes Book from BookDB
         /// </summary>

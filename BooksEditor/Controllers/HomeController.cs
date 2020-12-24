@@ -14,16 +14,20 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using System.ComponentModel.DataAnnotations;
+using BooksEditor.DataAccess;
+using System.Linq;
 
 namespace BooksEditor.Controllers
 {
     public class HomeController : Controller
     {
-        private IBooksRepository _repository;
-        private readonly IHostingEnvironment _environment;
-        public HomeController(IBooksRepository repository, IHostingEnvironment environment)
+        private IBooksRepository _booksRepository;
+        private IAuthorsRepository _authorsRepository;
+        private readonly IWebHostEnvironment _environment;
+        public HomeController(IBooksRepository booksRepository, IWebHostEnvironment environment, IAuthorsRepository authorsRepository)
         {
-            _repository = repository;
+            _booksRepository = booksRepository;
+            _authorsRepository = authorsRepository;
             _environment = environment;
         }
         public async Task<IActionResult> Index(string sortOrder)
@@ -31,18 +35,18 @@ namespace BooksEditor.Controllers
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 
-            var books = await _repository.GetAllBooks();
-            var authors = await _repository.GetAllAuthors();
+            var books = await _booksRepository.GetAllBooks();
+            var authors = await _authorsRepository.GetAllAuthors();
 
             var booksViewModel = (from book in books
-                         join author in authors on book.Id equals author.BookID
-                         into tempAuthors
-                         select new BooksViewModel
-                         {
-                             Book = book,
-                             Authors = tempAuthors.ToList()
-                         });
-          
+                                  join author in authors on book.Id equals author.BookID
+                                  into tempAuthors
+                                  select new BooksViewModel
+                                  {
+                                      Book = book,
+                                      Authors = tempAuthors.ToList()
+                                  });
+
             switch (sortOrder)
             {
                 case "name_desc":
@@ -80,22 +84,17 @@ namespace BooksEditor.Controllers
         public async Task<IActionResult> Create(
         [Bind("Title, PagesNumber, Publisher, ReleaseYear, Image")] Book book, string AuthorsNames, [FromForm(Name = "uploadImage")] IFormFile uploadImage)
         {
-         
             try
             {
                 if (ModelState.IsValid)
                 {
                     UploadImage(uploadImage, book);
 
-                    if(!string.IsNullOrEmpty(AuthorsNames))
+                    if (!string.IsNullOrEmpty(AuthorsNames))
                     {
                         SetAuthorsInitials(AuthorsNames, book);
                     }
-                    else
-                    {
-                        throw new Exception();
-                    }
-                    await _repository.AddBookData(book);
+                    await _booksRepository.AddBookData(book);
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -108,7 +107,7 @@ namespace BooksEditor.Controllers
             return View(book);
         }
 
-     
+
         /// <summary>
         /// GET for Edit Book
         /// </summary>
@@ -116,12 +115,15 @@ namespace BooksEditor.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Edit(int id)
         {
-            var book = await _repository.FindBookById(id);
+            var book = await _booksRepository.FindBookById(id);
             if (book == null)
             {
                 return NotFound();
             }
-            return View(book);
+            var authors = _authorsRepository.FindAuthorsByBookId(book.Id);
+
+            var booksViewModel = new BooksViewModel() { Book = book, Authors = authors.ToList(), AuthorsNames = GetAuthorsNamesString(authors)};
+            return View(booksViewModel);
         }
 
         /// <summary>
@@ -131,10 +133,10 @@ namespace BooksEditor.Controllers
         /// <returns></returns>
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int id)
+        public async Task<IActionResult> EditPost(int id, string AuthorsNames)
         {
-            var bookToUpdate = await _repository.FindBookById(id);
-          
+            var bookToUpdate = await _booksRepository.FindBookById(id);
+
             if (await TryUpdateModelAsync<Book>(
                 bookToUpdate,
                 "",
@@ -142,7 +144,7 @@ namespace BooksEditor.Controllers
             {
                 try
                 {
-                    await _repository.UpdateBook(bookToUpdate);
+                    await _booksRepository.UpdateBook(bookToUpdate);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException /* ex */)
@@ -163,7 +165,7 @@ namespace BooksEditor.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Delete(int id, bool? saveChangesError = false)
         {
-            var books = await _repository.FindBookById(id);
+            var books = await _booksRepository.FindBookById(id);
             if (books == null)
             {
                 return NotFound();
@@ -187,7 +189,7 @@ namespace BooksEditor.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var book = await _repository.FindBookById(id);
+            var book = await _booksRepository.FindBookById(id);
             if (book == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -195,7 +197,7 @@ namespace BooksEditor.Controllers
 
             try
             {
-                await _repository.RemoveBook(book);
+                await _booksRepository.RemoveBook(book);
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException /* ex */)
@@ -230,7 +232,7 @@ namespace BooksEditor.Controllers
             }
         }
 
-        private void SetAuthorsInitials(string AuthorsNames, Book book)
+        private void SetAuthorsInitials( string AuthorsNames, Book book )
         {
             var fullNames = AuthorsNames.Split(", ");
             foreach (var fullName in fullNames)
@@ -238,10 +240,14 @@ namespace BooksEditor.Controllers
                 var firstName = fullName.Split(" ")[0];
                 var lastName = fullName.Split(" ")[1];
 
-                if(!book.Authors.Any())
-                book.Authors.Add(new Author { FirstName = firstName, LastName = lastName });
+                if (!book.Authors.Any())
+                    book.Authors.Add(new Author { FirstName = firstName, LastName = lastName });
             }
         }
 
+        private string GetAuthorsNamesString( IEnumerable<Author> authors )
+        {
+            return String.Join(", ", authors.Select(author => author.FullName));
+        }
     }
 }

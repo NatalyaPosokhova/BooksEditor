@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using BooksEditor.DataAccess;
 
 namespace BooksEditor
 {
@@ -33,6 +34,7 @@ namespace BooksEditor
             services.AddMvc();
 
             services.AddScoped<IBooksRepository, BooksRepository>();
+            services.AddScoped<IAuthorsRepository, AuthorsRepository>();
 
             services.AddLogging();
 

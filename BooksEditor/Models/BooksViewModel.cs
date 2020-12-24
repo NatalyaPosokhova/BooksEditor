@@ -9,9 +9,14 @@ namespace BooksEditor.Models
     public class BooksViewModel
     {
         public Book Book { get; set; }
-        public List<Author> Authors { get; set; }
+        public List<Author> Authors 
+        { 
+            get; 
+            set; 
+        }
 
         public Author Author { get; set; }
 
+        public string AuthorsNames { get; set; }
     }
 }

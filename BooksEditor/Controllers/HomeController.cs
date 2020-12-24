@@ -77,14 +77,16 @@ namespace BooksEditor.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-        [Bind("Title, Authors, PagesNumber, Publisher, ReleaseYear, Image")] Book book, [FromForm(Name = "upload")] IFormFile upload)
+        [Bind("Title, PagesNumber, Publisher, ReleaseYear, Image")] Book book, string AuthorsNames, [FromForm(Name = "uploadImage")] IFormFile uploadImage)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    UploadImage(upload, book);
-                
+                    UploadImage(uploadImage, book);
+
+                    SetAuthorsInitials(AuthorsNames, book);
+
                     await _repository.AddBookData(book);
                     return RedirectToAction(nameof(Index));
                 }
@@ -98,7 +100,7 @@ namespace BooksEditor.Controllers
             return View(book);
         }
 
-       
+     
         /// <summary>
         /// GET for Edit Book
         /// </summary>
@@ -219,6 +221,17 @@ namespace BooksEditor.Controllers
                 }
             }
         }
-       
+
+        private void SetAuthorsInitials(string AuthorsNames, Book book)
+        {
+            var fullNames = AuthorsNames.Split(", ");
+            foreach (var fullName in fullNames)
+            {
+                var firstName = fullName.Split(" ")[0];
+                var lastName = fullName.Split(" ")[1];
+                book.Authors.Add(new Author { FirstName = firstName, LastName = lastName });
+            }
+        }
+
     }
 }

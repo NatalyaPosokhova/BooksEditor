@@ -34,6 +34,6 @@ namespace BooksEditor.Models
 
         [Required]
         public Book Book { get; set; }
-      
+
     }
 }

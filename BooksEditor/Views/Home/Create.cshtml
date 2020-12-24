@@ -1,5 +1,5 @@
 ﻿
-@model BooksEditor.Models.Book
+@model BooksEditor.Models.BooksViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -12,32 +12,32 @@
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Book.Title" class="control-label"></label>
+                <input asp-for="Book.Title" class="form-control" />
+                <span asp-validation-for="Book.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Authors" class="control-label"></label>
-                <input asp-for="Authors" class="form-control" />
+                <input asp-for="AuthorsNames" class="form-control" />
                 <span asp-validation-for="Authors" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PagesNumber" class="control-label"></label>
-                <input asp-for="PagesNumber" class="form-control" />
-                <span asp-validation-for="PagesNumber" class="text-danger"></span>
+                <label asp-for="Book.PagesNumber" class="control-label"></label>
+                <input asp-for="Book.PagesNumber" class="form-control" />
+                <span asp-validation-for="Book.PagesNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReleaseYear" class="control-label"></label>
-                <input asp-for="ReleaseYear" class="form-control" />
-                <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+                <label asp-for="Book.ReleaseYear" class="control-label"></label>
+                <input asp-for="Book.ReleaseYear" class="form-control" />
+                <span asp-validation-for="Book.ReleaseYear" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Publisher" class="control-label"></label>
-                <input asp-for="Publisher" class="form-control" />
-                <span asp-validation-for="Publisher" class="text-danger"></span>
+                <label asp-for="Book.Publisher" class="control-label"></label>
+                <input asp-for="Book.Publisher" class="form-control" />
+                <span asp-validation-for="Book.Publisher" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="file" asp-for="Image" name="upload" /><br>
+                <input type="file" asp-for="Book.Image" name="uploadImage" /><br>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

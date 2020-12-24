@@ -22,7 +22,8 @@ namespace BooksEditor.Models
         public string Title { get; set; }
 
         [Required]
-        public ICollection<Author> Authors { 
+        public ICollection<Author> Authors 
+        { 
             get; 
             set; 
         }

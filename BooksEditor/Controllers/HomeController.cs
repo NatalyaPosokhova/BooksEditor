@@ -13,7 +13,7 @@ using FluentAssertions.Common;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
 
 namespace BooksEditor.Controllers
 {
@@ -80,14 +80,14 @@ namespace BooksEditor.Controllers
         public async Task<IActionResult> Create(
         [Bind("Title, PagesNumber, Publisher, ReleaseYear, Image")] Book book, string AuthorsNames, [FromForm(Name = "uploadImage")] IFormFile uploadImage)
         {
-            string pattern = @"[A-Z][a-z]*\s[A-Z][a-z]*,?";
+         
             try
             {
                 if (ModelState.IsValid)
                 {
                     UploadImage(uploadImage, book);
 
-                    if(!string.IsNullOrEmpty(AuthorsNames) && Regex.IsMatch(AuthorsNames, pattern))
+                    if(!string.IsNullOrEmpty(AuthorsNames))
                     {
                         SetAuthorsInitials(AuthorsNames, book);
                     }
@@ -237,6 +237,8 @@ namespace BooksEditor.Controllers
             {
                 var firstName = fullName.Split(" ")[0];
                 var lastName = fullName.Split(" ")[1];
+
+                if(!book.Authors.Any())
                 book.Authors.Add(new Author { FirstName = firstName, LastName = lastName });
             }
         }

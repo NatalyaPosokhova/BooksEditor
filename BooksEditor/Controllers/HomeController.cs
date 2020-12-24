@@ -123,10 +123,7 @@ namespace BooksEditor.Controllers
             {
                 return NotFound();
             }
-            var authors = _authorsRepository.FindAuthorsByBookId(book.Id);
-
-            var booksViewModel = new BooksViewModel() { Book = book, Authors = authors.ToList(), AuthorsNames = GetAuthorsNamesString(authors)};
-            return View(booksViewModel);
+            return View(book);
         }
 
         /// <summary>
@@ -138,25 +135,26 @@ namespace BooksEditor.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditPost(int id, string AuthorsNames)
         {
-            var bookToUpdate = await _booksRepository.FindBookById(id);
+           var bookToUpdate = await _booksRepository.FindBookById(id);
 
             if (await TryUpdateModelAsync<Book>(
                 bookToUpdate,
                 "",
-                s => s.Title, s => s.Authors, s => s.PagesNumber, s => s.Publisher, s => s.ReleaseYear, s => s.Image))
+                s => s.Title, s => s.PagesNumber, s => s.Publisher, s => s.ReleaseYear))
             {
                 try
                 {
                     await _booksRepository.UpdateBook(bookToUpdate);
                     return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateException /* ex */)
+                catch (DbUpdateException)
                 {
                     ModelState.AddModelError("", "Unable to save changes. " +
                         "Try again, and if the problem persists, " +
                         "see your system administrator.");
                 }
             }
+
             return View(bookToUpdate);
         }
 
@@ -240,7 +238,7 @@ namespace BooksEditor.Controllers
         /// </summary>
         /// <param name="AuthorsNames"></param>
         /// <param name="book"></param>
-        private void SetAuthorsInitials( string AuthorsNames, Book book )
+        private void SetAuthorsInitials(string AuthorsNames, Book book)
         {
             var fullNames = AuthorsNames.Split(", ");
             foreach (var fullName in fullNames)
@@ -258,7 +256,7 @@ namespace BooksEditor.Controllers
         /// </summary>
         /// <param name="authors"></param>
         /// <returns></returns>
-        private string GetAuthorsNamesString( IEnumerable<Author> authors )
+        private string GetAuthorsNamesString(IEnumerable<Author> authors)
         {
             return String.Join(", ", authors.Select(author => author.FullName));
         }

@@ -98,22 +98,7 @@ namespace BooksEditor.Controllers
             return View(book);
         }
 
-        private void UploadImage(IFormFile upload, Book book)
-        {
-            if (upload != null)
-            {
-                string fileName = Path.GetFileName(upload.FileName);
-                var uploads = Path.Combine(_environment.WebRootPath, "img");
-                var fullPath = Path.Combine(uploads, fileName);
-                book.Image = fileName;
-                if (!System.IO.File.Exists(fullPath))
-                {
-                    upload.CopyTo(new FileStream(fullPath, FileMode.Create));
-                }
-            }
-        }
-
-
+       
         /// <summary>
         /// GET for Edit Book
         /// </summary>
@@ -214,5 +199,26 @@ namespace BooksEditor.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        /// <summary>
+        /// Uploads Images to Server and Images names to Books Database
+        /// </summary>
+        /// <param name="upload"></param>
+        /// <param name="book"></param>
+        private void UploadImage(IFormFile upload, Book book)
+        {
+            if (upload != null)
+            {
+                string fileName = Path.GetFileName(upload.FileName);
+                var uploads = Path.Combine(_environment.WebRootPath, "img");
+                var fullPath = Path.Combine(uploads, fileName);
+                book.Image = fileName;
+                if (!System.IO.File.Exists(fullPath))
+                {
+                    upload.CopyTo(new FileStream(fullPath, FileMode.Create));
+                }
+            }
+        }
+       
     }
 }

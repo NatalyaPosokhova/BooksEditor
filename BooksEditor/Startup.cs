@@ -32,7 +32,7 @@ namespace BooksEditor
 
             services.AddMvc();
 
-            services.AddScoped<IRepository, BooksEditorRepository>();
+            services.AddScoped<IBooksEditorRepository, BooksEditorRepository>();
 
             services.AddLogging();
 

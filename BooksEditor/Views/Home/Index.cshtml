@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BooksEditor.Models.Book>
+﻿@model IEnumerable<BooksEditor.Models.BooksViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -11,25 +11,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                @Html.DisplayNameFor(model => model.Book.Id)
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Title)</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Book.Title)</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Authors)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PagesNumber)
+                @Html.DisplayNameFor(model => model.Book.PagesNumber)
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.ReleaseYear)</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Book.ReleaseYear)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Publisher)
+                @Html.DisplayNameFor(model => model.Book.Publisher)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Image)
+                @Html.DisplayNameFor(model => model.Book.Image)
             </th>
             <th></th>
         </tr>
@@ -40,32 +40,35 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
+                    @Html.DisplayFor(modelItem => item.Book.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Authors)
+                    @Html.DisplayFor(modelItem => item.Book.Title)
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.PagesNumber)
+                    @foreach (var author in item.Authors)
+                    { 
+                        @Html.DisplayFor(modelItem =>author.FullName) <br>
+                    }
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Book.PagesNumber)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ReleaseYear)
+                    @Html.DisplayFor(modelItem => item.Book.ReleaseYear)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Publisher)
+                    @Html.DisplayFor(modelItem => item.Book.Publisher)
                 </td>
                 <td>
-                    <img src= "~/img/@Html.DisplayFor(modelItem => item.Image)"/>
-                  
+                    <img src="~/img/@Html.DisplayFor(modelItem => item.Book.Image)" />
+
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Book.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Book.Id">Delete</a>
                 </td>
             </tr>
         }

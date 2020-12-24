@@ -24,9 +24,6 @@ namespace BooksEditor.Models
         [StringLength(20)]
         public string LastName { get; set; }
 
-        [Required]
-        public Book Book { get; set; }
-
         public string FullName
         {
             get
@@ -34,5 +31,9 @@ namespace BooksEditor.Models
                 return FirstName + " " + LastName;
             }
         }
+
+        [Required]
+        public Book Book { get; set; }
+      
     }
 }

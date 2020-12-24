@@ -18,9 +18,9 @@ namespace BooksEditor.Controllers
 {
     public class HomeController : Controller
     {
-        private IRepository _repository;
+        private IBooksEditorRepository _repository;
         private readonly IHostingEnvironment _environment;
-        public HomeController(IRepository repository, IHostingEnvironment environment)
+        public HomeController(IBooksEditorRepository repository, IHostingEnvironment environment)
         {
             _repository = repository;
             _environment = environment;
@@ -31,25 +31,34 @@ namespace BooksEditor.Controllers
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 
             var books = await _repository.GetAllBooks();
+            var authors = await _repository.GetAllAuthors();
 
-            books.ToList().ForEach(book => _repository.IncludeAuthors(book.Id));
-
+            var booksViewModel = (from book in books
+                         join author in authors on book.Id equals author.BookID
+                         into tempAuthors
+                         //from authors_ in tempAuthors.DefaultIfEmpty()
+                         select new BooksViewModel
+                         {
+                             Book = book,
+                             Authors = tempAuthors.ToList()
+                         });
+          
             switch (sortOrder)
             {
                 case "name_desc":
-                    books = books.OrderByDescending(s => s.Title);
+                    booksViewModel = booksViewModel.OrderByDescending(s => s.Book.Title);
                     break;
                 case "Date":
-                    books = books.OrderBy(s => s.ReleaseYear);
+                    booksViewModel = booksViewModel.OrderBy(s => s.Book.ReleaseYear);
                     break;
                 case "date_desc":
-                    books = books.OrderByDescending(s => s.ReleaseYear);
+                    booksViewModel = booksViewModel.OrderByDescending(s => s.Book.ReleaseYear);
                     break;
                 default:
-                    books = books.OrderBy(s => s.Title);
+                    booksViewModel = booksViewModel.OrderBy(s => s.Book.Title);
                     break;
             }
-            return View(books);
+            return View(booksViewModel);
         }
 
         /// <summary>
@@ -75,13 +84,13 @@ namespace BooksEditor.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                
                     if (upload != null)
                     {
                         string fileName = Path.GetFileName(upload.FileName);
                         var uploads = Path.Combine(_environment.WebRootPath, "img");
                         var fullPath = Path.Combine(uploads, fileName);
                         book.Image = fileName;
-
                         if (!System.IO.File.Exists(fullPath))
                         {
                             upload.CopyTo(new FileStream(fullPath, FileMode.Create));

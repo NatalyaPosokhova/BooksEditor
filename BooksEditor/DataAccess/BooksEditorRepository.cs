@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BooksEditor.DataAccsess
 {
-    public class BooksEditorRepository : IRepository
+    public class BooksEditorRepository : IBooksEditorRepository
     {
         private BooksEditorContext _context { get; set; }
         public BooksEditorRepository(BooksEditorContext context)
@@ -33,7 +33,8 @@ namespace BooksEditor.DataAccsess
         /// <returns>Book</returns>
         public async Task<Book> FindBookById(int id)
         {
-            return await _context.Books.FindAsync(id);
+            var book = await _context.Books.FindAsync(id);
+            return book;
         }
 
         /// <summary>
@@ -42,7 +43,13 @@ namespace BooksEditor.DataAccsess
         /// <returns>Books</returns>
         public async Task<IEnumerable<Book>> GetAllBooks()
         {
-            return await _context.Books.ToListAsync();
+            var books = await _context.Books.ToListAsync();
+            return books;
+        }
+        public async Task<IEnumerable<Author>> GetAllAuthors()
+        {
+            var authors = await _context.Authors.ToListAsync();
+            return authors;
         }
 
         /// <summary>
@@ -65,12 +72,5 @@ namespace BooksEditor.DataAccsess
             await _context.SaveChangesAsync();
         }
 
-        public void IncludeAuthors(int id)
-        {
-            //_context.Books.Include(x => x.Authors).Where(x => x.Id == id).Single();
-            _context.Books
-            .Include(x => x.Authors)
-            .Where(x => x.Id == id).ToList();
-        }
     }
 }

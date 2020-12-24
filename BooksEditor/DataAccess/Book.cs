@@ -1,9 +1,7 @@
-﻿using BooksEditor.DataAccsess;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace BooksEditor.Models
 {
@@ -22,11 +20,7 @@ namespace BooksEditor.Models
         public string Title { get; set; }
 
         [Required]
-        public ICollection<Author> Authors 
-        { 
-            get; 
-            set; 
-        }
+        public ICollection<Author> Authors { get; set; }
 
         [Required]
         [Range(0, 10000)]

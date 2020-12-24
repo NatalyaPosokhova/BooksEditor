@@ -7,15 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BooksEditor.Models;
 using BooksEditor.DataAccsess;
-using System.Web;
 using Microsoft.EntityFrameworkCore;
-using FluentAssertions.Common;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using System.ComponentModel.DataAnnotations;
 using BooksEditor.DataAccess;
-using System.Linq;
+
 
 namespace BooksEditor.Controllers
 {
@@ -30,6 +27,12 @@ namespace BooksEditor.Controllers
             _authorsRepository = authorsRepository;
             _environment = environment;
         }
+
+        /// <summary>
+        /// Index
+        /// </summary>
+        /// <param name="sortOrder"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Index(string sortOrder)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -232,6 +235,11 @@ namespace BooksEditor.Controllers
             }
         }
 
+        /// <summary>
+        /// Sets Authors FirstName and LastName in Authors DB
+        /// </summary>
+        /// <param name="AuthorsNames"></param>
+        /// <param name="book"></param>
         private void SetAuthorsInitials( string AuthorsNames, Book book )
         {
             var fullNames = AuthorsNames.Split(", ");
@@ -245,6 +253,11 @@ namespace BooksEditor.Controllers
             }
         }
 
+        /// <summary>
+        /// Writes Authors' Full Names in string
+        /// </summary>
+        /// <param name="authors"></param>
+        /// <returns></returns>
         private string GetAuthorsNamesString( IEnumerable<Author> authors )
         {
             return String.Join(", ", authors.Select(author => author.FullName));

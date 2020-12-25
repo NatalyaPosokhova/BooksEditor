@@ -46,8 +46,8 @@ namespace BooksEditor.Controllers
                                   into tempAuthors
                                   select new BooksViewModel
                                   {
-                                      Book = book,
-                                      Authors = tempAuthors.ToList()
+                                      Book = book
+                                      
                                   });
 
             switch (sortOrder)

@@ -10,12 +10,19 @@ namespace BooksEditor.Models
     {
 
         public ActiveRecord.Book Book { get; set; }
-        public List<ActiveRecord.Author> Authors 
-        { 
-            get; 
-            set; 
-        }
+        
 
-        public string AuthorsNames { get; set; }
+        public IList<string> Authors
+        {
+            get
+            {
+                IList<String> result = new List<String>();
+                foreach (var item in Book.Authors)
+                {
+                    result.Add(item.FirstName + " " + item.LastName);
+                }
+                return result;
+            }
+        }
     }
 }

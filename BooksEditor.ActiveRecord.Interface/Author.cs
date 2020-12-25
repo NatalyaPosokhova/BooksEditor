@@ -20,16 +20,7 @@ namespace BooksEditor.ActiveRecord
         [StringLength(20)]
         public string LastName { get; set; }
 
-        [NotMapped]
-        public string FullName
-        {
-            get
-            {
-                return FirstName + " " + LastName;
-            }
-        }
-
-        [Required]
+       [Required]
         public Book Book { get; set; }
 
     }

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooksEditor", "BooksEditor\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooksEditor.ActiveRecord.Interface", "BooksEditor.ActiveRecord.Interface\BooksEditor.ActiveRecord.Interface.csproj", "{C4758F4C-10A7-4072-BBD6-941667EB0433}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooksEditor.ActiveRecord", "BooksEditor.ActiveRecord\BooksEditor.ActiveRecord.csproj", "{B95F91DF-0732-490D-82BD-EE467BC1A669}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C4758F4C-10A7-4072-BBD6-941667EB0433}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4758F4C-10A7-4072-BBD6-941667EB0433}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4758F4C-10A7-4072-BBD6-941667EB0433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B95F91DF-0732-490D-82BD-EE467BC1A669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B95F91DF-0732-490D-82BD-EE467BC1A669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B95F91DF-0732-490D-82BD-EE467BC1A669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B95F91DF-0732-490D-82BD-EE467BC1A669}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -15,6 +15,11 @@
   <ItemGroup>
     <None Include="wwwroot\img\TomSawyer.jpg" />
     <None Include="wwwroot\img\Winnie.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BooksEditor.ActiveRecord.Interface\BooksEditor.ActiveRecord.Interface.csproj" />
+    <ProjectReference Include="..\BooksEditor.ActiveRecord\BooksEditor.ActiveRecord.csproj" />
   </ItemGroup>
 
 </Project>

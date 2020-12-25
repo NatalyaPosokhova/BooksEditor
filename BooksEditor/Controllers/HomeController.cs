@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BooksEditor.Models;
-using BooksEditor.DataAccsess;
+using BooksEditor.ActiveRecord;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using BooksEditor.DataAccess;
+
 
 
 namespace BooksEditor.Controllers
 {
     public class HomeController : Controller
     {
-        private IBooksRepository _booksRepository;
-        private IAuthorsRepository _authorsRepository;
+        private ActiveRecord.IBooksRepository _booksRepository;
+        private ActiveRecord.IAuthorsRepository _authorsRepository;
         private readonly IWebHostEnvironment _environment;
         public HomeController(IBooksRepository booksRepository, IWebHostEnvironment environment, IAuthorsRepository authorsRepository)
         {
@@ -85,7 +85,7 @@ namespace BooksEditor.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-        [Bind("Title, PagesNumber, Publisher, ReleaseYear, Image")] Book book, string AuthorsNames, [FromForm(Name = "uploadImage")] IFormFile uploadImage)
+        [Bind("Title, PagesNumber, Publisher, ReleaseYear, Image")] Models.Book book, string AuthorsNames, [FromForm(Name = "uploadImage")] IFormFile uploadImage)
         {
             try
             {
@@ -97,7 +97,18 @@ namespace BooksEditor.Controllers
                     {
                         SetAuthorsInitials(AuthorsNames, book);
                     }
-                    await _booksRepository.AddBookData(book);
+                    ActiveRecord.Book new_book = new ActiveRecord.Book()
+                    {
+                        Title = book.Title,
+                        Publisher = book.Publisher,
+                        ReleaseYear = book.ReleaseYear,
+                        PagesNumber = book.PagesNumber,
+                        Image = book.Image,
+                        Authors = (ICollection<ActiveRecord.Author>)book.Authors                   
+                    };
+                    //SetAuthorsInitials(AuthorsNames, new_book);
+
+                    await _booksRepository.AddBookData(new_book);
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -137,7 +148,7 @@ namespace BooksEditor.Controllers
         {
            var bookToUpdate = await _booksRepository.FindBookById(id);
 
-            if (await TryUpdateModelAsync<Book>(
+            if (await TryUpdateModelAsync<ActiveRecord.Book>(
                 bookToUpdate,
                 "",
                 s => s.Title, s => s.PagesNumber, s => s.Publisher, s => s.ReleaseYear))
@@ -218,7 +229,7 @@ namespace BooksEditor.Controllers
         /// </summary>
         /// <param name="upload"></param>
         /// <param name="book"></param>
-        private void UploadImage(IFormFile upload, Book book)
+        private void UploadImage(IFormFile upload, Models.Book book)
         {
             if (upload != null)
             {
@@ -238,7 +249,7 @@ namespace BooksEditor.Controllers
         /// </summary>
         /// <param name="AuthorsNames"></param>
         /// <param name="book"></param>
-        private void SetAuthorsInitials(string AuthorsNames, Book book)
+        private void SetAuthorsInitials(string AuthorsNames, Models.Book book)
         {
             var fullNames = AuthorsNames.Split(", ");
             foreach (var fullName in fullNames)
@@ -247,7 +258,7 @@ namespace BooksEditor.Controllers
                 var lastName = fullName.Split(" ")[1];
 
                 if (!book.Authors.Any())
-                    book.Authors.Add(new Author { FirstName = firstName, LastName = lastName });
+                    book.Authors.Add(new Models.Author { FirstName = firstName, LastName = lastName });
             }
         }
 
@@ -256,7 +267,7 @@ namespace BooksEditor.Controllers
         /// </summary>
         /// <param name="authors"></param>
         /// <returns></returns>
-        private string GetAuthorsNamesString(IEnumerable<Author> authors)
+        private string GetAuthorsNamesString(IEnumerable<Models.Author> authors)
         {
             return String.Join(", ", authors.Select(author => author.FullName));
         }

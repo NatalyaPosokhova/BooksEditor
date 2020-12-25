@@ -8,8 +8,9 @@ namespace BooksEditor.Models
 {
     public class BooksViewModel
     {
-        public Book Book { get; set; }
-        public List<Author> Authors 
+
+        public ActiveRecord.Book Book { get; set; }
+        public List<ActiveRecord.Author> Authors 
         { 
             get; 
             set; 

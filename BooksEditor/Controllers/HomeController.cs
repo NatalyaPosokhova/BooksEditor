@@ -47,7 +47,7 @@ namespace BooksEditor.Controllers
                                   select new BooksViewModel
                                   {
                                       Book = book
-                                      
+
                                   });
 
             switch (sortOrder)
@@ -104,8 +104,18 @@ namespace BooksEditor.Controllers
                         ReleaseYear = book.ReleaseYear,
                         PagesNumber = book.PagesNumber,
                         Image = book.Image,
-                        Authors = (ICollection<ActiveRecord.Author>)book.Authors                   
+                        // Authors = (ICollection<ActiveRecord.Author>)book.Authors                   
                     };
+                    foreach (var item in book.Authors)
+                    {
+                        new_book.Authors.Add(new ActiveRecord.Author()
+                        {
+                            FirstName = item.FirstName,
+                            LastName = item.LastName,
+                            Book = new_book
+                        });
+                    }
+
                     //SetAuthorsInitials(AuthorsNames, new_book);
 
                     await _booksRepository.AddBookData(new_book);
@@ -146,7 +156,7 @@ namespace BooksEditor.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditPost(int id, string AuthorsNames)
         {
-           var bookToUpdate = await _booksRepository.FindBookById(id);
+            var bookToUpdate = await _booksRepository.FindBookById(id);
 
             if (await TryUpdateModelAsync<ActiveRecord.Book>(
                 bookToUpdate,

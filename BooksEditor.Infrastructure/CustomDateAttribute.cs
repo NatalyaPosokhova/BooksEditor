@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace BooksEditor.Models
+namespace BooksEditor.Infrastructure
 {
-    internal class CustomDateAttribute : RangeAttribute
+    public class CustomDateAttribute : RangeAttribute
     {
         private const int minYear = 1800;
         public CustomDateAttribute()

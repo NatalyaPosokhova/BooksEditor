@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BooksEditor.ActiveRecord.Interface\BooksEditor.ActiveRecord.Interface.csproj" />
+    <ProjectReference Include="..\BooksEditor.Infrastructure\BooksEditor.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

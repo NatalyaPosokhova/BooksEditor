@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BooksEditor.DataAccsess;
+using BooksEditor.ActiveRecord;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+
 
 namespace BooksEditor
 {
@@ -30,7 +31,7 @@ namespace BooksEditor
                 try
                 {
                     var context = services.GetRequiredService<BooksEditorContext>();
-                    DbInitializer.Initialize(context);
+                    BooksEditor.Models.DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)
                 {

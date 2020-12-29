@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using BooksEditor.ActiveRecord.Interface;
 
 namespace BooksEditor
 {
@@ -34,13 +35,13 @@ namespace BooksEditor
 
             services.AddScoped<IBooksRepository, BooksRepository>();
             services.AddScoped<IAuthorsRepository, AuthorsRepository>();
+            services.AddScoped<IBooksAuthorsRepository, BooksAuthorsRepository>();
 
             services.AddLogging();
 
             services.AddDbContext<BooksEditorContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            //services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

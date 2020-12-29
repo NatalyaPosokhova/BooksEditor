@@ -31,7 +31,7 @@ namespace BooksEditor
                 try
                 {
                     var context = services.GetRequiredService<BooksEditorContext>();
-                    BooksEditor.Models.DbInitializer.Initialize(context);
+                    Models.DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)
                 {

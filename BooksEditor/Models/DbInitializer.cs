@@ -1,7 +1,6 @@
-﻿//using BooksEditor.Models;
-using System.Linq;
+﻿using System.Linq;
 using BooksEditor.ActiveRecord;
-
+using BooksEditor.ActiveRecord.Interface;
 
 namespace BooksEditor.Models
 {
@@ -16,50 +15,56 @@ namespace BooksEditor.Models
                 return;
             }
 
-            var books = new ActiveRecord.Book[]
+            var books = new Book[]
             {
-            new ActiveRecord.Book{ Title = "The Adventures of Tom Sawyer",  PagesNumber = 1000, Publisher = "HarperCollins Publishers", ReleaseYear = 1876, Image = "TomSawyer.jpg"},
-            new ActiveRecord.Book{ Title = "Winnie the Pooh", PagesNumber = 300, Publisher = "Random House Inc.", ReleaseYear = 1926, Image = "Winnie.jpg" }
+            new Book{ Title = "The Adventures of Tom Sawyer",  PagesNumber = 1000, Publisher = "HarperCollins Publishers", ReleaseYear = 1876, Image = "TomSawyer.jpg"},
+            new Book{ Title = "Winnie the Pooh", PagesNumber = 300, Publisher = "Random House Inc.", ReleaseYear = 1926, Image = "Winnie.jpg" }
             };
-            foreach (ActiveRecord.Book book in books)
+            foreach (Book book in books)
             {
                 context.Books.Add(book);
             }
             context.SaveChanges();
 
-            var authors = new ActiveRecord.Author[]
-{
-                new ActiveRecord.Author {
-                    BookID = books.Single(s => s.Title == "The Adventures of Tom Sawyer").Id,
-                     FirstName = "Mark",
-                     LastName = "Twain"
-                },
-                new ActiveRecord.Author {
-                    BookID = books.Single(s => s.Title == "The Adventures of Tom Sawyer").Id,
-                     FirstName = "Alan",
-                     LastName = "Keller"
-                },
-                new ActiveRecord.Author {
-                    BookID = books.Single(s => s.Title == "The Adventures of Tom Sawyer").Id,
-                     FirstName = "Tom",
-                     LastName = "Andersen"
-                },
-                new ActiveRecord.Author {
-                BookID = books.Single(s => s.Title == "Winnie the Pooh").Id,
-                FirstName = "Alan",
-                LastName = "Miln"
-                }
-};
-
-            foreach (ActiveRecord.Author author in authors)
+            var authors = new Author[]
             {
-                var authorInDataBase = context.Authors.Where(
-                    s => s.Book.Id == author.BookID).SingleOrDefault();
-                if (authorInDataBase == null)
-                {
-                    context.Authors.Add(author);
+                new Author {
+                    FirstName = "Mark",
+                    LastName = "Twain"
+                },
+                new Author {
+                    FirstName = "Alan",
+                    LastName = "Keller"
+                },
+                new Author {
+                    FirstName = "Tom",
+                    LastName = "Andersen"
+                },
+                new Author {
+                    FirstName = "Alan",
+                    LastName = "Miln"
                 }
+            };
+
+            foreach (Author author in authors)
+            {
+                context.Authors.Add(author);
             }
+
+            var bookAuthors = new BookAuthor[]
+            {
+                new BookAuthor(1, 1),
+                new BookAuthor(1, 2),
+                new BookAuthor(1, 3),
+                new BookAuthor(2, 4),
+                new BookAuthor(2, 1)
+            };
+
+            foreach (BookAuthor bookAuthor in bookAuthors)
+            {
+                context.BookAuthors.Add(bookAuthor);
+            }
+
             context.SaveChanges();
         }
     }

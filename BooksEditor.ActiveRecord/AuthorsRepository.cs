@@ -23,14 +23,30 @@ namespace BooksEditor.ActiveRecord
             return authors;
         }
 
-        /// <summary>
-        /// Returns List of Authors by Book Id
-        /// </summary>
-        /// <param name="bookId"></param>
-        /// <returns></returns>
-        public  IEnumerable<Author> FindAuthorsByBookId(int bookId)
+        public async Task AddAuthorData(Author author)
         {
-            return _context.Authors.Where(author => author.BookID == bookId); 
+            _context.Add(author);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsAuthorExists(Author author)
+        {
+            return await _context.Authors.AnyAsync(a => a.FirstName == author.FirstName && a.LastName == author.LastName);
+        }
+
+        public async Task<int> GetAuthorId(Author author)
+        {
+            return await _context.Authors.Where(a => a.FirstName == author.FirstName && a.LastName == author.LastName).Select(au => au.AuthorID).FirstAsync();
+        }
+        public async Task SaveAuthor(Author author)
+        {
+            await _context.SaveChangesAsync();
+        }
+        public async Task RemoveAuthorById(int authorId)
+        {
+            var authorToDelete = await _context.Authors.SingleAsync(a => a.AuthorID == authorId);
+            _context.Remove(authorToDelete);
+            await _context.SaveChangesAsync();
         }
     }
 }

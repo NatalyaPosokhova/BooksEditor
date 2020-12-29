@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BooksEditor.ActiveRecord
@@ -9,10 +10,6 @@ namespace BooksEditor.ActiveRecord
         public int AuthorID { get; set; }
 
         [Required]
-        [ForeignKey(nameof(Book))]
-        public int BookID { get; set; }
-
-        [Required]
         [StringLength(20)]
         public string FirstName { get; set; }
 
@@ -20,8 +17,7 @@ namespace BooksEditor.ActiveRecord
         [StringLength(20)]
         public string LastName { get; set; }
 
-       [Required]
-        public Book Book { get; set; }
-
+        [NotMapped]
+        public string FullName => $"{FirstName} {LastName}";          
     }
 }

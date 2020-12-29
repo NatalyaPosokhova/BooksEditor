@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,14 +23,13 @@ namespace BooksEditor.ActiveRecord
         }
 
         /// <summary>
-        /// Finds book by Id
+        /// Finds book by Id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Book</returns>
         public async Task<Book> FindBookById(int id)
         {
-            var book = await _context.Books.FindAsync(id);
-            return book;
+            return await _context.Books.FindAsync(id);
         }
 
         /// <summary>
@@ -40,8 +38,7 @@ namespace BooksEditor.ActiveRecord
         /// <returns>Books</returns>
         public async Task<IEnumerable<Book>> GetAllBooks()
         {
-            var books = await _context.Books.ToListAsync();
-            return books;
+            return await _context.Books.ToListAsync();
         }
        
         /// <summary>
@@ -54,13 +51,8 @@ namespace BooksEditor.ActiveRecord
             await _context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Uodates Book in BookDb by id
-        /// </summary>
-        /// <param name="id"></param>
-        public async Task UpdateBook(Book book)
+        public async Task SaveBook(Book book)
         {
-            _context.Books.Update(book);
             await _context.SaveChangesAsync();
         }
 

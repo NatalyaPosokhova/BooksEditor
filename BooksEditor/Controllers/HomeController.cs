@@ -116,7 +116,7 @@ namespace BooksEditor.Controllers
 
                     foreach (var author in bookViewModel.Authors)
                     {
-                        await AddNotExistedAuthorForBookToRelationsDatabase(book.Id, author);
+                        await AddAuthorForBookToRelationsDatabase(book.Id, author);
                     }
                     return RedirectToAction(nameof(Index));
                 }
@@ -335,7 +335,7 @@ namespace BooksEditor.Controllers
             return authors.Where(x => authorsIds.Contains(x.AuthorID)).Select(a => a.FullName).ToList();
         }
 
-        private async Task AddNotExistedAuthorForBookToRelationsDatabase(int bookId, string author)
+        private async Task AddAuthorForBookToRelationsDatabase(int bookId, string author)
         {
             int authorId;
             Author authorToDownload = new Author

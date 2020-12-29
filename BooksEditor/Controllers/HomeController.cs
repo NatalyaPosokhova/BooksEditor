@@ -239,19 +239,10 @@ namespace BooksEditor.Controllers
                 {
                     return RedirectToAction(nameof(Index));
                 }
-                var authorsToDeleteIds = await _booksAuthorsRepository.GetAuthorsIdsByBookId(id);
 
-                foreach (var idToDelete in authorsToDeleteIds)
-                {
-                    await _booksAuthorsRepository.RemoveAuthorForBook(new BookAuthor(id, idToDelete));
-
-                    var relations = await _booksAuthorsRepository.GetBooksIdsByAuthorid(idToDelete);
-                    if (relations.Count() == 0)
-                    {
-                        await _authorsRepository.RemoveAuthorById(idToDelete);
-                    }
-                }
+                await RemoveExceededAuthorsForBook(id);
                 await _booksRepository.RemoveBook(book);
+
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException /* ex */)
@@ -357,6 +348,21 @@ namespace BooksEditor.Controllers
 
             var bookAuthor = new BookAuthor(bookId, authorId);
             await _booksAuthorsRepository.AddBookAuthor(bookAuthor);
+        }
+
+        private async Task RemoveExceededAuthorsForBook(int bookId)
+        {
+            var authorsToDeleteIds = await _booksAuthorsRepository.GetAuthorsIdsByBookId(bookId);
+            foreach (var idToDelete in authorsToDeleteIds)
+            {
+                await _booksAuthorsRepository.RemoveAuthorForBook(new BookAuthor(bookId, idToDelete));
+
+                var relations = await _booksAuthorsRepository.GetBooksIdsByAuthorid(idToDelete);
+                if (relations.Count() == 0)
+                {
+                    await _authorsRepository.RemoveAuthorById(idToDelete);
+                }
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using BooksEditor.Models;
 using BooksEditor.ActiveRecord;
 using Microsoft.EntityFrameworkCore;
@@ -41,17 +40,10 @@ namespace BooksEditor.Controllers
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 
             var books = await _booksRepository.GetAllBooks();
-            var authors = await _authorsRepository.GetAllAuthors();
-            var booksAuthors = await _booksAuthorsRepository.GetAllBooksAuthors();
 
             var booksViewModels = new List<BookViewModel>();
-            //int id = 0;
-
             foreach (var book in books)
             {
-
-                var authorsIds = await _booksAuthorsRepository.GetAuthorsIdsByBookId(book.Id);
-
                 booksViewModels.Add(new BookViewModel()
                 {
                     Id = book.Id,
@@ -60,7 +52,7 @@ namespace BooksEditor.Controllers
                     Publisher = book.Publisher,
                     ReleaseYear = book.ReleaseYear,
                     Image = book.Image,
-                    Authors = authors.Where(x => authorsIds.Contains(x.AuthorID)).Select(a => a.FullName).ToList()
+                    Authors = await GetAuthorsForBook(book.Id)
                 });
             }
 
@@ -79,7 +71,6 @@ namespace BooksEditor.Controllers
                     booksViewModels = booksViewModels.OrderBy(s => s.Title).ToList();
                     break;
             }
-
             return View(booksViewModels);
         }
 
@@ -113,7 +104,6 @@ namespace BooksEditor.Controllers
                     {
                         bookViewModel.Image = UploadImage(uploadImage);
                     }
-
                     var book = new Book()
                     {
                         Title = bookViewModel.Title,
@@ -173,9 +163,6 @@ namespace BooksEditor.Controllers
                 return NotFound();
             }
 
-            var authors = await _authorsRepository.GetAllAuthors();
-            var authorsIds = await _booksAuthorsRepository.GetAuthorsIdsByBookId(Id);
-
             var bookViewModel = new BookViewModel()
             {
                 Id = book.Id,
@@ -183,8 +170,7 @@ namespace BooksEditor.Controllers
                 PagesNumber = book.PagesNumber,
                 Publisher = book.Publisher,
                 ReleaseYear = book.ReleaseYear,
-                //Image = book.Image,
-                Authors = authors.Where(x => authorsIds.Contains(x.AuthorID)).Select(a => a.FullName).ToList()
+                Authors = await GetAuthorsForBook(Id)
             };
 
             return View(bookViewModel);
@@ -210,7 +196,7 @@ namespace BooksEditor.Controllers
 
                 await _booksRepository.SaveBook(bookToUpdate);
                 await UpdateAuthorsListInDatabase(id, bookViewModel.Authors);
-                
+
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException)
@@ -236,8 +222,6 @@ namespace BooksEditor.Controllers
                 return NotFound();
             }
 
-            var authors = await _authorsRepository.GetAllAuthors();
-            var authorsIds = await _booksAuthorsRepository.GetAuthorsIdsByBookId(book.Id);
             var bookViewModel = new BookViewModel()
             {
                 Id = book.Id,
@@ -246,7 +230,7 @@ namespace BooksEditor.Controllers
                 Publisher = book.Publisher,
                 ReleaseYear = book.ReleaseYear,
                 Image = book.Image,
-                Authors = authors.Where(x => authorsIds.Contains(x.AuthorID)).Select(a => a.FullName).ToList()
+                Authors = await GetAuthorsForBook(book.Id)
             };
 
             if (saveChangesError.GetValueOrDefault())
@@ -362,6 +346,12 @@ namespace BooksEditor.Controllers
                 await _booksAuthorsRepository.AddBookAuthor(new BookAuthor(bookId, newAuthorsId));
             }
         }
-       
+        private async Task<List<string>> GetAuthorsForBook(int bookId)
+        {
+            var authors = await _authorsRepository.GetAllAuthors();
+            var authorsIds = await _booksAuthorsRepository.GetAuthorsIdsByBookId(bookId);
+
+            return authors.Where(x => authorsIds.Contains(x.AuthorID)).Select(a => a.FullName).ToList();
+        }
     }
 }

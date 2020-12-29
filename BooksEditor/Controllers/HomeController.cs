@@ -93,8 +93,8 @@ namespace BooksEditor.Controllers
         public async Task<IActionResult> Create(
         [Bind("Title, Authors, PagesNumber, Publisher, ReleaseYear")] BookViewModel bookViewModel, [FromForm(Name = "uploadImage")] IFormFile uploadImage)
         {
-            int authorId;
-            bool IsAuthorExists;
+            //int authorId;
+            //bool IsAuthorExists;
 
             try
             {
@@ -114,28 +114,9 @@ namespace BooksEditor.Controllers
                     };
                     await _booksRepository.AddBookData(book);
 
-                    var authorsArray = String.Join(", ", bookViewModel.Authors.ToArray()).Split(", ");
-                    foreach (var author in authorsArray)
+                    foreach (var author in bookViewModel.Authors)
                     {
-                        Author authorToDownload = new Author
-                        {
-                            FirstName = author.Split(" ")[0],
-                            LastName = author.Split(" ")[1]
-                        };
-
-                        IsAuthorExists = await _authorsRepository.IsAuthorExists(authorToDownload);
-                        if (!IsAuthorExists)
-                        {
-                            await _authorsRepository.AddAuthorData(authorToDownload);
-                            authorId = authorToDownload.AuthorID;
-                        }
-                        else
-                        {
-                            authorId = await _authorsRepository.GetAuthorId(authorToDownload);
-                        }
-
-                        var bookAuthor = new BookAuthor(book.Id, authorId);
-                        await _booksAuthorsRepository.AddBookAuthor(bookAuthor);
+                        await AddNotExistedAuthorForBookToRelationsDatabase(book.Id, author);
                     }
                     return RedirectToAction(nameof(Index));
                 }
@@ -352,6 +333,30 @@ namespace BooksEditor.Controllers
             var authorsIds = await _booksAuthorsRepository.GetAuthorsIdsByBookId(bookId);
 
             return authors.Where(x => authorsIds.Contains(x.AuthorID)).Select(a => a.FullName).ToList();
+        }
+
+        private async Task AddNotExistedAuthorForBookToRelationsDatabase(int bookId, string author)
+        {
+            int authorId;
+            Author authorToDownload = new Author
+            {
+                FirstName = author.Split(" ")[0],
+                LastName = author.Split(" ")[1]
+            };
+
+            bool IsAuthorExists = await _authorsRepository.IsAuthorExists(authorToDownload);
+            if (!IsAuthorExists)
+            {
+                await _authorsRepository.AddAuthorData(authorToDownload);
+                authorId = authorToDownload.AuthorID;
+            }
+            else
+            {
+                authorId = await _authorsRepository.GetAuthorId(authorToDownload);
+            }
+
+            var bookAuthor = new BookAuthor(bookId, authorId);
+            await _booksAuthorsRepository.AddBookAuthor(bookAuthor);
         }
     }
 }
